@@ -1,0 +1,6 @@
+{
+  "name": "Moreninha do Bronze",
+  "description": "Studio VIP de bronzeamento e boutique sensual com agendamento online, anamnese digital, pagamento no local e catálogo de produtos com suporte a links diretos de imagem.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

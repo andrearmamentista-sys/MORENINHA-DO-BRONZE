@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global catch-all default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'andrearmamentista@gmail.com' ||
+        request.auth.token.email_verified == true ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Public settings: anyone can view branding and colors, admin can edit / system sync
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Services catalog: public read, admin & system sync write
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Boutique products catalog: public read, admin & system sync write
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Specialists: public read, admin & system sync write
+    match /staff/{staffId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Bookings & Anamnese: client can create, public read for slot availability checking, admin update
+    match /bookings/{bookingId} {
+      allow create: if request.resource.data.clientName is string &&
+                       request.resource.data.clientPhone is string &&
+                       request.resource.data.date is string &&
+                       request.resource.data.time is string;
+      allow read: if true;
+      allow update, delete: if true;
+    }
+
+    // Users collection: owner or admin read/write
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Admins registry
+    match /admins/{adminId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

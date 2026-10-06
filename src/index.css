@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+:root {
+  /* Default Luxury Blue Palette (Azul Safira Oceano VIP) */
+  --color-ruby-950: #030a17;
+  --color-ruby-900: #07152b;
+  --color-ruby-850: #0a1d3d;
+  --color-ruby-800: #0e2954;
+  --color-ruby-700: #143c7b;
+  --color-ruby-600: #1b56a8;
+  --color-ruby-500: #0284c7;
+  --color-ruby-400: #38bdf8;
+  --color-ruby-300: #7dd3fc;
+  
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+
+  --theme-glass-panel: rgba(7, 21, 43, 0.85);
+  --theme-glass-card: rgba(10, 29, 61, 0.58);
+  --theme-primary-from: #0284c7;
+  --theme-primary-to: #0369a1;
+  --theme-primary-hover-from: #38bdf8;
+  --theme-primary-hover-to: #0284c7;
+  --theme-primary-glow: rgba(2, 132, 199, 0.45);
+}
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --color-ruby-950: var(--color-ruby-950, #030a17);
+  --color-ruby-900: var(--color-ruby-900, #07152b);
+  --color-ruby-850: var(--color-ruby-850, #0a1d3d);
+  --color-ruby-800: var(--color-ruby-800, #0e2954);
+  --color-ruby-700: var(--color-ruby-700, #143c7b);
+  --color-ruby-600: var(--color-ruby-600, #1b56a8);
+  --color-ruby-500: var(--color-ruby-500, #0284c7);
+  --color-ruby-400: var(--color-ruby-400, #38bdf8);
+  --color-ruby-300: var(--color-ruby-300, #7dd3fc);
+  
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+}
+
+@layer utilities {
+  .glass-panel {
+    background: var(--theme-glass-panel, rgba(7, 21, 43, 0.85));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+  }
+  
+  .glass-card {
+    background: var(--theme-glass-card, rgba(10, 29, 61, 0.58));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(251, 191, 36, 0.18);
+  }
+  
+  .glass-card-hover {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .glass-card-hover:hover {
+    border-color: rgba(251, 191, 36, 0.55);
+    box-shadow: 0 12px 30px -8px var(--theme-primary-glow, rgba(2, 132, 199, 0.45));
+    transform: translateY(-2px);
+  }
+
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .blue-gradient-text {
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .ruby-gradient-btn {
+    background: linear-gradient(135deg, var(--theme-primary-from, #0284c7) 0%, var(--theme-primary-to, #0369a1) 100%);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .ruby-gradient-btn:hover {
+    background: linear-gradient(135deg, var(--theme-primary-hover-from, #38bdf8) 0%, var(--theme-primary-hover-to, #0284c7) 100%);
+    box-shadow: 0 6px 20px -4px var(--theme-primary-glow, rgba(2, 132, 199, 0.45));
+  }
+}
+
+/* Animations for lively VIP page and mascot */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes marquinha-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(251, 191, 36, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(2, 132, 199, 0.7), inset 0 0 15px rgba(251, 191, 36, 0.4);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-marquinha-glow {
+  animation: marquinha-glow 2.5s ease-in-out infinite;
+}
+
+/* Eye-catching Blinking Promo Animations requested by user */
+@keyframes blink-promo {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.95), 0 0 30px rgba(239, 68, 68, 0.8);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.97);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
+  }
+}
+
+.animate-blink-promo {
+  animation: blink-promo 0.85s infinite ease-in-out;
+}
+
+@keyframes flash-text {
+  0%, 100% {
+    color: #fef08a;
+    text-shadow: 0 0 12px #eab308, 0 0 24px #f97316;
+  }
+  50% {
+    color: #ffffff;
+    text-shadow: 0 0 4px #eab308;
+  }
+}
+
+.animate-flash-text {
+  animation: flash-text 0.75s infinite ease-in-out;
+}
+
+@keyframes neon-sensual-glow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(236, 72, 153, 0.35), 0 0 50px rgba(168, 85, 247, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 70px rgba(168, 85, 247, 0.45);
+  }
+}
+
+.animate-sensual-glow {
+  animation: neon-sensual-glow 3s infinite ease-in-out;
+}
+
+/* Custom luxury scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ruby-950, #030a17);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ruby-700, #143c7b);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ruby-500, #0284c7);
+}

@@ -1,0 +1,294 @@
+{
+  "entities": {
+    "StudioSettings": {
+      "title": "StudioSettings",
+      "description": "Configurações gerais e tema visual do Studio Moreninha do Bronze",
+      "type": "object",
+      "properties": {
+        "studioName": {
+          "type": "string",
+          "description": "Nome comercial do estúdio"
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Subtítulo da marca"
+        },
+        "heroTitle": {
+          "type": "string",
+          "description": "Título principal do banner hero"
+        },
+        "heroDesc": {
+          "type": "string",
+          "description": "Descrição do banner hero"
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "Número do WhatsApp principal do estúdio"
+        },
+        "pixKey": {
+          "type": "string",
+          "description": "Chave Pix do estúdio"
+        },
+        "pixBeneficiary": {
+          "type": "string",
+          "description": "Nome do beneficiário Pix"
+        },
+        "address": {
+          "type": "string",
+          "description": "Endereço físico do estúdio"
+        },
+        "cityState": {
+          "type": "string",
+          "description": "Cidade e estado"
+        },
+        "hours": {
+          "type": "string",
+          "description": "Horário de funcionamento"
+        },
+        "themeBgColor": {
+          "type": "string",
+          "description": "Cor de fundo do sistema"
+        },
+        "themeTextColor": {
+          "type": "string",
+          "description": "Cor das letras e títulos"
+        },
+        "themePrimaryColor": {
+          "type": "string",
+          "description": "Cor de destaque dos botões"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Data da última atualização"
+        }
+      },
+      "required": ["studioName", "whatsapp"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Procedimento ou técnica de bronzeamento oferecida",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Nome do procedimento"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duração média do procedimento"
+        },
+        "price": {
+          "type": "number",
+          "description": "Preço do procedimento em reais"
+        },
+        "desc": {
+          "type": "string",
+          "description": "Descrição detalhada dos benefícios"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL da foto demonstrativa"
+        },
+        "phototypeRecommended": {
+          "type": "string",
+          "description": "Fototipo de pele recomendado"
+        }
+      },
+      "required": ["title", "price", "duration"]
+    },
+    "BoutiqueProduct": {
+      "title": "BoutiqueProduct",
+      "description": "Produto cosmético ou acessório da Boutique Sensual",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome do produto"
+        },
+        "price": {
+          "type": "number",
+          "description": "Preço de venda em reais"
+        },
+        "category": {
+          "type": "string",
+          "description": "Categoria do produto"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL da foto do produto"
+        },
+        "desc": {
+          "type": "string",
+          "description": "Descrição sensorial do produto"
+        },
+        "inStock": {
+          "type": "boolean",
+          "description": "Disponibilidade em estoque"
+        }
+      },
+      "required": ["name", "price", "category"]
+    },
+    "StaffMember": {
+      "title": "StaffMember",
+      "description": "Especialista em bronzeamento do estúdio",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome completo da especialista"
+        },
+        "role": {
+          "type": "string",
+          "description": "Cargo ou legenda profissional"
+        },
+        "specialty": {
+          "type": "string",
+          "description": "Especialidade técnica"
+        },
+        "bio": {
+          "type": "string",
+          "description": "Biografia e formação"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL da foto de perfil da profissional"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Número do WhatsApp para alertas de agendamento"
+        }
+      },
+      "required": ["name", "role", "specialty"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Agendamento de bronzeamento realizado pelo cliente",
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "type": "string",
+          "description": "ID do serviço agendado"
+        },
+        "serviceTitle": {
+          "type": "string",
+          "description": "Título do serviço agendado"
+        },
+        "professionalId": {
+          "type": "string",
+          "description": "ID da especialista selecionada"
+        },
+        "professionalName": {
+          "type": "string",
+          "description": "Nome da especialista selecionada"
+        },
+        "date": {
+          "type": "string",
+          "description": "Data do atendimento YYYY-MM-DD"
+        },
+        "time": {
+          "type": "string",
+          "description": "Horário marcado HH:MM"
+        },
+        "clientName": {
+          "type": "string",
+          "description": "Nome completo da cliente"
+        },
+        "clientPhone": {
+          "type": "string",
+          "description": "WhatsApp de contato da cliente"
+        },
+        "phototype": {
+          "type": "string",
+          "description": "Fototipo de pele declarado na anamnese"
+        },
+        "pregnant": {
+          "type": "string",
+          "description": "Declaração de gravidez ou lactação"
+        },
+        "health": {
+          "type": "string",
+          "description": "Observações de saúde e alergias"
+        },
+        "total": {
+          "type": "number",
+          "description": "Valor total do atendimento"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Método de pagamento escolhido (local ou pix)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status do agendamento (agendado, confirmado, concluido, cancelado)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID do usuário se autenticado via Google"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Data de criação do agendamento"
+        }
+      },
+      "required": ["serviceTitle", "date", "time", "clientName", "clientPhone", "total", "status"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Perfil de usuário autenticado no sistema",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "UID Firebase do usuário"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email do usuário"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Nome de exibição"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Foto do perfil Google"
+        },
+        "role": {
+          "type": "string",
+          "description": "Papel do usuário (admin ou client)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Data de criação da conta"
+        }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/settings/{settingId}": {
+      "schema": "StudioSettings",
+      "description": "Configurações gerais do estúdio e temas visuais"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Procedimentos cadastrados de bronzeamento"
+    },
+    "/products/{productId}": {
+      "schema": "BoutiqueProduct",
+      "description": "Produtos do catálogo da boutique sensual"
+    },
+    "/staff/{staffId}": {
+      "schema": "StaffMember",
+      "description": "Equipe de profissionais especialistas do estúdio"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Registros de agendamentos e fichas de anamnese"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Perfis de usuários registrados"
+    }
+  }
+}
