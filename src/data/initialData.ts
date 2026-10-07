@@ -188,8 +188,8 @@ export const INITIAL_SETTINGS: StudioSettings = {
 };
 
 export const INITIAL_ADMIN_CREDENTIALS = {
-  login: 'admin',
-  password: ''
+  login: 'abelinha',
+  password: '21976333205'
 };
 
 export const INITIAL_BOOKINGS: Booking[] = [

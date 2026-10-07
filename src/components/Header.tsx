@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <User className="w-4 h-4 text-gold-400" />
               )}
               <span className="hidden sm:inline text-[11px] text-gray-200 font-medium max-w-[90px] truncate">
-                {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0]}
+                {currentUser.displayName?.split(' ')[0] || 'Admin'}
               </span>
               {onSignOut && (
                 <button

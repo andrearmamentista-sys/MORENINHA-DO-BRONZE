@@ -187,9 +187,12 @@ export default function App() {
     testFirestoreConnection();
 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAdminAuthenticated(true);
-        localStorage.setItem('mbronze_admin_session', 'true');
+      if (user && user.email) {
+        const email = user.email.toLowerCase();
+        if (email === 'andrearmamentista@gmail.com') {
+          setIsAdminAuthenticated(true);
+          localStorage.setItem('mbronze_admin_session', 'true');
+        }
       }
     });
 
@@ -426,19 +429,25 @@ export default function App() {
     setIsAdminAuthOpen(false);
     setCurrentTab('admin');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast(`Bem-vinda, administradora @${adminCredentials.login}! Modo de edição liberado.`);
+    showToast('Bem-vinda, administradora! Modo de edição liberado.');
   };
 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       if (result.user) {
-        setIsAdminAuthenticated(true);
-        localStorage.setItem('mbronze_admin_session', 'true');
-        setIsAdminAuthOpen(false);
-        setCurrentTab('admin');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        showToast(`Bem-vinda, ${result.user.displayName || result.user.email}! Modo admin liberado.`);
+        const userEmail = (result.user.email || '').toLowerCase();
+        if (userEmail === 'andrearmamentista@gmail.com') {
+          setIsAdminAuthenticated(true);
+          localStorage.setItem('mbronze_admin_session', 'true');
+          setIsAdminAuthOpen(false);
+          setCurrentTab('admin');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          showToast('Bem-vinda, administradora! Painel VIP liberado.');
+        } else {
+          await signOut(auth);
+          showToast('Acesso negado: Esta conta não possui autorização de administradora.');
+        }
       }
     } catch (error) {
       console.error('Google Sign-In Error:', error);
@@ -1078,7 +1087,7 @@ export default function App() {
             credentials={adminCredentials}
             onUpdateCredentials={(newCreds) => {
               setAdminCredentials(newCreds);
-              showToast('Login e senha da administradora atualizados!');
+              showToast('Credenciais da administradora atualizadas com segurança!');
             }}
           />
         )}

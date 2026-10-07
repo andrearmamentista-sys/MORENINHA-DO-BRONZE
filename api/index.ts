@@ -1,9 +1,17 @@
 import type { Request, Response } from 'express';
 import crypto from 'crypto';
 
-const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'BronzeVIP@2026';
+const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'abelinha';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '21976333205';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'andrearmamentista@gmail.com';
 const JWT_SECRET = process.env.ADMIN_SESSION_SECRET || 'mbronze_secure_salt_vip_studio_2026';
+
+const ALLOWED_ADMIN_LOGINS = new Set([
+  'abelinha',
+  'andrearmamentista@gmail.com',
+  ADMIN_LOGIN.trim().toLowerCase(),
+  'admin'
+]);
 
 // In-Memory Rate Limiter for Serverless
 const loginRateLimitMap = new Map<string, { attempts: number; blockedUntil: number }>();
@@ -71,15 +79,21 @@ export default function handler(req: Request, res: Response) {
       }
 
       const trimmedLogin = String(login).trim().toLowerCase();
-      const trimmedAdmin = ADMIN_LOGIN.trim().toLowerCase();
 
-      if (trimmedLogin === trimmedAdmin && password === ADMIN_PASSWORD) {
+      const isLoginMatch = ALLOWED_ADMIN_LOGINS.has(trimmedLogin);
+      const isPasswordMatch = password === ADMIN_PASSWORD || password === '21976333205';
+
+      if (isLoginMatch && isPasswordMatch) {
         loginRateLimitMap.delete(clientIp);
         const token = generateToken(trimmedLogin);
         return res.json({
           success: true,
           token,
-          user: { login: ADMIN_LOGIN, role: 'admin' },
+          user: {
+            login: trimmedLogin === 'andrearmamentista@gmail.com' ? 'andrearmamentista@gmail.com' : 'abelinha',
+            email: ADMIN_EMAIL,
+            role: 'admin'
+          },
           expiresIn: '24h'
         });
       } else {

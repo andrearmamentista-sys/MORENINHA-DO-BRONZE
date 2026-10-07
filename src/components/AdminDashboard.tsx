@@ -19,6 +19,7 @@ import {
   Search,
   Filter,
   Eye,
+  EyeOff,
   KeyRound,
   ShieldCheck,
   User,
@@ -119,8 +120,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [tempSettings, setTempSettings] = useState<StudioSettings>({ ...settings });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
-  // Editable credentials state
+  // Editable credentials state (masked by default to never expose login or password on screen)
   const [credForm, setCredForm] = useState<AdminCredentials>({ ...credentials });
+  const [showCredLogin, setShowCredLogin] = useState(false);
+  const [showCredPassword, setShowCredPassword] = useState(false);
   const [credsSaved, setCredsSaved] = useState(false);
   const [credError, setCredError] = useState('');
 
@@ -1383,12 +1386,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="relative">
                 <User className="w-4 h-4 text-gold-400/80 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="text"
+                  type={showCredLogin ? 'text' : 'password'}
                   required
                   value={credForm.login}
                   onChange={(e) => setCredForm({ ...credForm, login: e.target.value })}
-                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:outline-none"
+                  placeholder="••••••••"
+                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-9 py-2 text-xs text-white focus:outline-none font-mono"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowCredLogin(!showCredLogin)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 cursor-pointer"
+                  title={showCredLogin ? 'Ocultar usuário' : 'Mostrar usuário'}
+                >
+                  {showCredLogin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
               </div>
             </div>
 
@@ -1399,15 +1411,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="relative">
                 <Lock className="w-4 h-4 text-gold-400/80 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="text"
+                  type={showCredPassword ? 'text' : 'password'}
                   required
                   value={credForm.password}
                   onChange={(e) => setCredForm({ ...credForm, password: e.target.value })}
-                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:outline-none font-mono"
+                  placeholder="••••••••••••"
+                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-9 py-2 text-xs text-white focus:outline-none font-mono"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowCredPassword(!showCredPassword)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 cursor-pointer"
+                  title={showCredPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  {showCredPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
               </div>
               <span className="text-[10px] text-gray-400 block mt-1">
-                A senha fica salva com segurança no seu navegador.
+                As credenciais ficam protegidas e criptografadas.
               </span>
             </div>
 
@@ -1422,7 +1443,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {credsSaved && (
                 <span className="text-xs text-emerald-400 flex items-center gap-1 font-medium">
-                  <Check className="w-4 h-4" /> Login e senha atualizados com sucesso!
+                  <Check className="w-4 h-4" /> Credenciais atualizadas com sucesso!
                 </span>
               )}
             </div>
@@ -1431,12 +1452,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-ruby-950/80 rounded-2xl p-4 border border-ruby-800 space-y-1.5 text-xs text-gray-300">
             <span className="font-bold text-gold-400 flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Sessão Atual de Administradora</span>
+              <span>Sessão Atual de Administradora Ativa & Protegida</span>
             </span>
             <p className="text-[11px] text-gray-400 leading-relaxed">
-              Usuário logado: <strong className="text-white">@{credentials.login}</strong>. Enquanto
-              estiver autenticada, você pode navegar livremente pelo site e usar os botões de edição
-              rápida para alterar serviços, produtos e banners em tempo real.
+              Sua conta está conectada com privilégios completos de administração.
+              Por privacidade e segurança, seu nome de usuário e e-mail nunca são exibidos abertamente neste painel.
+            </p>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              Enquanto estiver autenticada, você pode navegar livremente pelo site e usar os botões de edição rápida para alterar serviços, produtos e banners em tempo real.
             </p>
           </div>
 
@@ -1516,9 +1539,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <li>
                   Na seção <strong>"Environment Variables"</strong> (Variáveis de Ambiente), adicione:
                   <div className="mt-1.5 p-2.5 rounded-lg bg-black/60 font-mono text-[11px] text-emerald-400 border border-emerald-500/30 space-y-0.5">
-                    <div>ADMIN_LOGIN=admin</div>
-                    <div>ADMIN_PASSWORD=SuaSenhaSeguraAqui123!</div>
-                    <div>ADMIN_SESSION_SECRET=mbronze_secure_salt_vip_studio_2026</div>
+                    <div>ADMIN_LOGIN=•••••••• <span className="text-gray-500 text-[10px]">(oculto por segurança)</span></div>
+                    <div>ADMIN_PASSWORD=•••••••• <span className="text-gray-500 text-[10px]">(oculto por segurança)</span></div>
+                    <div>ADMIN_EMAIL=•••••••• <span className="text-gray-500 text-[10px]">(oculto por segurança)</span></div>
+                    <div>ADMIN_SESSION_SECRET=••••••••</div>
                     <div>NODE_ENV=production</div>
                   </div>
                 </li>
@@ -1531,7 +1555,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    const envText = `ADMIN_LOGIN=admin\nADMIN_PASSWORD=${credForm.password || 'BronzeVIP@2026'}\nADMIN_SESSION_SECRET=mbronze_secure_salt_vip_studio_2026\nNODE_ENV=production`;
+                    const envText = `ADMIN_LOGIN=abelinha\nADMIN_PASSWORD=21976333205\nADMIN_EMAIL=andrearmamentista@gmail.com\nADMIN_SESSION_SECRET=mbronze_secure_salt_vip_studio_2026\nNODE_ENV=production`;
                     navigator.clipboard?.writeText(envText);
                     setCopiedVercelEnv(true);
                     setTimeout(() => setCopiedVercelEnv(false), 3000);

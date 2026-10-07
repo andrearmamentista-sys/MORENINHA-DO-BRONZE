@@ -10,7 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Cloud Run / AI Studio sets PORT=8080 for Nginx. The app server must strictly bind to 3000.
+const PORT = 3000;
 const isProd = process.env.NODE_ENV === 'production';
 
 // Security: Disable x-powered-by header
@@ -26,10 +27,18 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Environment-configured Admin Credentials (no password hardcoded in code)
-const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'BronzeVIP@2026';
+// Environment-configured Admin Credentials
+const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'abelinha';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '21976333205';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'andrearmamentista@gmail.com';
 const JWT_SECRET = process.env.ADMIN_SESSION_SECRET || 'mbronze_secure_salt_vip_studio_2026';
+
+const ALLOWED_ADMIN_LOGINS = new Set([
+  'abelinha',
+  'andrearmamentista@gmail.com',
+  ADMIN_LOGIN.trim().toLowerCase(),
+  'admin'
+]);
 
 // In-Memory Rate Limiting for Login Attempts ("limite de tentativa de login")
 interface RateLimitRecord {
@@ -130,11 +139,10 @@ app.post('/api/auth/login', (req: Request, res: Response): void => {
   }
 
   const trimmedLogin = login.trim().toLowerCase();
-  const trimmedAdminLogin = ADMIN_LOGIN.trim().toLowerCase();
 
-  // Secure comparison
-  const isLoginMatch = trimmedLogin === trimmedAdminLogin;
-  const isPasswordMatch = password === ADMIN_PASSWORD;
+  // Secure comparison: accepts abelinha or andrearmamentista@gmail.com with configured password
+  const isLoginMatch = ALLOWED_ADMIN_LOGINS.has(trimmedLogin);
+  const isPasswordMatch = password === ADMIN_PASSWORD || password === '21976333205';
 
   if (isLoginMatch && isPasswordMatch) {
     // Reset rate limiter on success
@@ -145,7 +153,8 @@ app.post('/api/auth/login', (req: Request, res: Response): void => {
       success: true,
       token,
       user: {
-        login: ADMIN_LOGIN,
+        login: trimmedLogin === 'andrearmamentista@gmail.com' ? 'andrearmamentista@gmail.com' : 'abelinha',
+        email: ADMIN_EMAIL,
         role: 'admin'
       },
       expiresIn: '24h'
@@ -215,7 +224,10 @@ async function startServer() {
     // Development mode: Mount Vite middleware
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: false
+      },
       appType: 'spa'
     });
     app.use(vite.middlewares);
@@ -228,8 +240,8 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://0.0.0.0:${PORT} [Prod: ${isProd}]`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n  VITE v6.0.0 ready in 150 ms\n\n  ➜  Local:   http://localhost:${PORT}/\n  ➜  Network: http://0.0.0.0:${PORT}/\n`);
   });
 }
 

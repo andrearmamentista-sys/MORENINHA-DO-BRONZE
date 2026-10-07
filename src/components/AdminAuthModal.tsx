@@ -81,15 +81,18 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
       }
 
       setErrorMsg(data.error || 'Erro na verificação de acesso.');
-    } catch {
       // Fallback if server is in static mode or network unavailable
       const normalizedEnteredLogin = trimmedLogin.toLowerCase();
-      const normalizedExpectedLogin = (credentials.login || 'admin').toLowerCase();
+      const isAllowedUser =
+        normalizedEnteredLogin === 'abelinha' ||
+        normalizedEnteredLogin === 'andrearmamentista@gmail.com' ||
+        normalizedEnteredLogin === (credentials.login || 'abelinha').toLowerCase();
 
-      if (
-        (credentials.password && passwordInput === credentials.password && normalizedEnteredLogin === normalizedExpectedLogin) ||
-        (passwordInput === 'BronzeVIP@2026' && (normalizedEnteredLogin === 'admin' || normalizedEnteredLogin === normalizedExpectedLogin))
-      ) {
+      const isAllowedPassword =
+        passwordInput === '21976333205' ||
+        (credentials.password && passwordInput === credentials.password);
+
+      if (isAllowedUser && isAllowedPassword) {
         setErrorMsg('');
         setLoginInput('');
         setPasswordInput('');
@@ -149,7 +152,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>Entrar com Conta Google (Admin)</span>
+              <span>Entrar com Conta Google</span>
             </button>
 
             <div className="relative my-3">
@@ -167,7 +170,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
           {/* Login Input */}
           <div className="space-y-1">
             <label className="text-[11px] font-medium text-gray-300 block">
-              Login ou Usuário:
+              Usuário ou E-mail:
             </label>
             <div className="relative">
               <User className="w-4 h-4 text-gold-400/80 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -179,7 +182,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                   setErrorMsg('');
                 }}
                 disabled={rateLimitLocked || isLoading}
-                placeholder="Usuário administrador"
+                placeholder="Digite seu usuário ou e-mail"
                 required
                 className="w-full bg-ruby-950 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none transition shadow-inner disabled:opacity-50"
               />
