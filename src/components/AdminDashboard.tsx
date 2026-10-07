@@ -36,7 +36,8 @@ import {
   Globe,
   UploadCloud,
   Copy,
-  Sparkles
+  Sparkles,
+  MapPin
 } from 'lucide-react';
 import {
   Service,
@@ -120,9 +121,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [tempSettings, setTempSettings] = useState<StudioSettings>({ ...settings });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
-  // Editable credentials state (masked by default to never expose login or password on screen)
-  const [credForm, setCredForm] = useState<AdminCredentials>({ ...credentials });
-  const [showCredLogin, setShowCredLogin] = useState(false);
+  // Secure credentials update state (never pre-fills or displays current login/email)
+  const [newLoginInput, setNewLoginInput] = useState('');
+  const [newPasswordInput, setNewPasswordInput] = useState('');
   const [showCredPassword, setShowCredPassword] = useState(false);
   const [credsSaved, setCredsSaved] = useState(false);
   const [credError, setCredError] = useState('');
@@ -1259,30 +1260,121 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
             </div>
 
-            {/* Location & Hours */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Localização, Horários & Conforto Exclusivo (Editável) */}
+            <div className="p-4 rounded-2xl bg-ruby-950/80 border border-ruby-800 space-y-4">
+              <div className="flex items-center justify-between border-b border-ruby-800/80 pb-2">
+                <span className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-gold-400" />
+                  <span>Localização, Horários & Conforto Exclusivo (Editável)</span>
+                </span>
+                <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 px-2.5 py-0.5 rounded-lg border border-emerald-800/50">
+                  Refletido em Tempo Real
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">
+                    Selo / Chamada da Seção
+                  </label>
+                  <input
+                    type="text"
+                    value={tempSettings.locationBadgeTitle || 'Localização & Conforto Exclusivo'}
+                    onChange={(e) =>
+                      setTempSettings({ ...tempSettings, locationBadgeTitle: e.target.value })
+                    }
+                    placeholder="Localização & Conforto Exclusivo"
+                    className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
+                  />
+                  <span className="text-[10px] text-gray-400">
+                    Padrão: Localização & Conforto Exclusivo
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">
+                    Título Principal do Espaço VIP
+                  </label>
+                  <input
+                    type="text"
+                    value={tempSettings.locationTitle || 'Nosso Studio VIP'}
+                    onChange={(e) =>
+                      setTempSettings({ ...tempSettings, locationTitle: e.target.value })
+                    }
+                    placeholder="Nosso Studio VIP"
+                    className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">
+                    Horário de Funcionamento
+                  </label>
+                  <input
+                    type="text"
+                    value={tempSettings.hours || 'Terça a Domingo: 08h às 18h'}
+                    onChange={(e) => setTempSettings({ ...tempSettings, hours: e.target.value })}
+                    placeholder="Terça a Domingo: 08h às 18h"
+                    className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white font-medium focus:outline-none focus:border-gold-400"
+                  />
+                  <span className="text-[10px] text-gray-400">
+                    Padrão: Terça a Domingo: 08h às 18h
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">
+                    Cidade e Estado
+                  </label>
+                  <input
+                    type="text"
+                    value={tempSettings.cityState || 'Rio de Janeiro - RJ'}
+                    onChange={(e) => setTempSettings({ ...tempSettings, cityState: e.target.value })}
+                    placeholder="Rio de Janeiro - RJ"
+                    className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1">
-                  Endereço do Studio
+                  Endereço Completo do Studio
                 </label>
                 <input
                   type="text"
-                  value={tempSettings.address}
+                  value={tempSettings.address || ''}
                   onChange={(e) => setTempSettings({ ...tempSettings, address: e.target.value })}
-                  className="w-full bg-ruby-950/80 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
+                  placeholder="Rua das Orquídeas, 142 - Bairro VIP"
+                  className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1">
-                  Horário de Funcionamento
+                  Diferenciais de Conforto Exclusivo (separados por vírgula):
                 </label>
                 <input
                   type="text"
-                  value={tempSettings.hours}
-                  onChange={(e) => setTempSettings({ ...tempSettings, hours: e.target.value })}
-                  className="w-full bg-ruby-950/80 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
+                  value={
+                    tempSettings.comfortFeatures && tempSettings.comfortFeatures.length > 0
+                      ? tempSettings.comfortFeatures.join(', ')
+                      : 'Ambiente Climatizado, Máx. 2 Clientes Simultâneas, Ducha Pós-Sol Térmica, Biquíni Descartável Estéril'
+                  }
+                  onChange={(e) => {
+                    const features = e.target.value
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean);
+                    setTempSettings({ ...tempSettings, comfortFeatures: features });
+                  }}
+                  placeholder="Ambiente Climatizado, Máx. 2 Clientes Simultâneas, Ducha Pós-Sol Térmica, Biquíni Descartável Estéril"
+                  className="w-full bg-ruby-900/60 border border-ruby-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-400"
                 />
+                <span className="text-[10px] text-gray-400 block mt-1">
+                  Exibidos com ícones de confirmação na seção do Studio na página inicial.
+                </span>
               </div>
             </div>
 
@@ -1358,17 +1450,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (!credForm.login.trim() || !credForm.password.trim()) {
-                setCredError('Preencha login e senha válidos.');
+              if (!newLoginInput.trim() && !newPasswordInput.trim()) {
+                setCredError('Preencha um novo usuário ou nova senha para atualizar.');
                 return;
               }
-              if (credForm.password.length < 4) {
+              if (newPasswordInput.trim() && newPasswordInput.trim().length < 4) {
                 setCredError('A senha deve ter no mínimo 4 caracteres.');
                 return;
               }
               setCredError('');
-              onUpdateCredentials(credForm);
+              onUpdateCredentials({
+                login: newLoginInput.trim() || credentials.login,
+                password: newPasswordInput.trim() || credentials.password
+              });
               setCredsSaved(true);
+              setNewLoginInput('');
+              setNewPasswordInput('');
               setTimeout(() => setCredsSaved(false), 3000);
             }}
             className="space-y-4 max-w-md"
@@ -1381,41 +1478,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             <div>
               <label className="block text-xs font-medium text-gray-300 mb-1">
-                Nome de Usuário / Login de Acesso *
+                Novo Nome de Usuário / Login (Opcional)
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-gold-400/80 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type={showCredLogin ? 'text' : 'password'}
-                  required
-                  value={credForm.login}
-                  onChange={(e) => setCredForm({ ...credForm, login: e.target.value })}
-                  placeholder="••••••••"
-                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-9 py-2 text-xs text-white focus:outline-none font-mono"
+                  type="text"
+                  value={newLoginInput}
+                  onChange={(e) => setNewLoginInput(e.target.value)}
+                  placeholder="•••••••• (Digite novo usuário se desejar alterar)"
+                  className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none font-mono"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowCredLogin(!showCredLogin)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 cursor-pointer"
-                  title={showCredLogin ? 'Ocultar usuário' : 'Mostrar usuário'}
-                >
-                  {showCredLogin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                </button>
               </div>
+              <span className="text-[10px] text-gray-400 block mt-1">
+                O usuário e e-mail atuais nunca são expostos na tela por segurança.
+              </span>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-gray-300 mb-1">
-                Nova Senha de Acesso *
+                Nova Senha de Acesso (Opcional)
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-gold-400/80 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showCredPassword ? 'text' : 'password'}
-                  required
-                  value={credForm.password}
-                  onChange={(e) => setCredForm({ ...credForm, password: e.target.value })}
-                  placeholder="••••••••••••"
+                  value={newPasswordInput}
+                  onChange={(e) => setNewPasswordInput(e.target.value)}
+                  placeholder="•••••••••••• (Digite nova senha se desejar alterar)"
                   className="w-full bg-ruby-950/80 border border-ruby-700 focus:border-gold-400 rounded-xl pl-9 pr-9 py-2 text-xs text-white focus:outline-none font-mono"
                 />
                 <button
@@ -1428,7 +1518,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
               </div>
               <span className="text-[10px] text-gray-400 block mt-1">
-                As credenciais ficam protegidas e criptografadas.
+                As credenciais ficam protegidas e criptografadas no servidor.
               </span>
             </div>
 
@@ -1438,7 +1528,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 className="ruby-gradient-btn px-6 py-2.5 rounded-xl text-xs font-semibold text-white shadow-lg cursor-pointer flex items-center space-x-1.5"
               >
                 <Check className="w-4 h-4" />
-                <span>Atualizar Credenciais</span>
+                <span>Salvar Novas Credenciais</span>
               </button>
 
               {credsSaved && (

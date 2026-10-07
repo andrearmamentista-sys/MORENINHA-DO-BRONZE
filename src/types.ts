@@ -107,6 +107,9 @@ export interface StudioSettings {
   themePrimaryColor?: string;
   themeTextColor?: string;
   themeBgColor?: string;
+  locationBadgeTitle?: string;
+  locationTitle?: string;
+  comfortFeatures?: string[];
   customClientMessageTemplate?: string;
   customStaffMessageTemplate?: string;
 }

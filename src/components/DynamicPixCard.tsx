@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Copy, Check, QrCode, ShieldCheck, Sparkles, Smartphone } from 'lucide-react';
-import { generatePixPayload } from '../utils/pix';
+import { Copy, Check, ShieldCheck, Sparkles, Smartphone, QrCode } from 'lucide-react';
+import { generatePixPayload, formatPixKeyDisplay, normalizePixKey } from '../utils/pix';
 
 interface DynamicPixCardProps {
   amount: number;
   totalAmount?: number;
-  pixKey: string;
-  beneficiaryName: string;
+  pixKey?: string;
+  beneficiaryName?: string;
   city?: string;
   txId?: string;
   description?: string;
@@ -20,18 +20,22 @@ interface DynamicPixCardProps {
 export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
   amount,
   totalAmount,
-  pixKey,
-  beneficiaryName,
+  pixKey = '21976333205',
+  beneficiaryName = 'Moreninha do Bronze',
   city = 'Rio de Janeiro',
   txId = 'MBRONZE',
   description = 'Moreninha do Bronze',
   allowAmountToggle = false,
   onAmountChange,
   title = 'Pagamento Instantâneo via Pix',
-  subtitle = 'Aponte a câmera do seu aplicativo de banco ou copie o código'
+  subtitle = 'Aponte a câmera do seu aplicativo de banco para pagar instantaneamente'
 }) => {
   const [selectedMode, setSelectedMode] = useState<'signal' | 'total'>('signal');
-  const [copied, setCopied] = useState(false);
+  const [copiedPayload, setCopiedPayload] = useState(false);
+  const [copiedKey, setCopiedKey] = useState(false);
+
+  // Active key guaranteed
+  const activeKey = pixKey && !pixKey.includes('moreninhabronze-pix-oficial') ? pixKey : '21976333205';
 
   // Compute active payment amount
   const activeAmount = useMemo(() => {
@@ -44,19 +48,25 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
   // Generate dynamic Pix BR Code payload
   const pixPayload = useMemo(() => {
     return generatePixPayload({
-      pixKey,
-      merchantName: beneficiaryName,
-      merchantCity: city,
+      pixKey: activeKey,
+      merchantName: beneficiaryName || 'MORENINHA DO BRONZE',
+      merchantCity: city || 'RIO DE JANEIRO',
       amount: activeAmount,
-      txId,
+      txId: txId || 'MBRONZE',
       description
     });
-  }, [pixKey, beneficiaryName, city, activeAmount, txId, description]);
+  }, [activeKey, beneficiaryName, city, activeAmount, txId, description]);
 
-  const handleCopy = () => {
+  const handleCopyPayload = () => {
     navigator.clipboard.writeText(pixPayload);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
+    setCopiedPayload(true);
+    setTimeout(() => setCopiedPayload(false), 3000);
+  };
+
+  const handleCopyRawKey = () => {
+    navigator.clipboard.writeText(activeKey);
+    setCopiedKey(true);
+    setTimeout(() => setCopiedKey(false), 3000);
   };
 
   const handleModeChange = (mode: 'signal' | 'total') => {
@@ -71,7 +81,7 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-ruby-800/80 pb-3">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs shadow-inner">
             PIX
           </div>
           <div>
@@ -86,10 +96,10 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
         {/* Amount Display */}
         <div className="text-left sm:text-right">
           <span className="text-[10px] text-gray-400 block uppercase tracking-wider">
-            Valor Dinâmico
+            {activeAmount > 0 ? 'Valor do Pagamento' : 'Valor Livre'}
           </span>
           <span className="text-lg sm:text-xl font-extrabold text-emerald-400 tabular-nums">
-            R$ {activeAmount.toFixed(2).replace('.', ',')}
+            {activeAmount > 0 ? `R$ ${activeAmount.toFixed(2).replace('.', ',')}` : 'A definir no banco'}
           </span>
         </div>
       </div>
@@ -125,13 +135,13 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
       {/* Central QR Code & Instructions */}
       <div className="flex flex-col sm:flex-row items-center gap-4 bg-ruby-950/70 p-3.5 rounded-xl border border-ruby-800/80">
         {/* Scannable High-Contrast QR Code */}
-        <div className="p-3 bg-white rounded-xl shadow-lg shrink-0 flex items-center justify-center border-2 border-emerald-500/40">
+        <div className="p-3 bg-white rounded-xl shadow-2xl shrink-0 flex items-center justify-center border-2 border-emerald-500/50">
           <QRCodeSVG
             value={pixPayload}
-            size={148}
+            size={160}
             level="M"
-            includeMargin={false}
-            fgColor="#0d0407"
+            includeMargin={true}
+            fgColor="#000000"
             bgColor="#ffffff"
           />
         </div>
@@ -143,7 +153,7 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
               1
             </span>
             <span className="text-[11px] leading-tight">
-              Abra o app do seu banco e escolha a opção <strong>Pix</strong>.
+              Abra o aplicativo do seu banco (Nubank, Itaú, Inter, Bradesco, etc.) e acesse a área <strong>Pix</strong>.
             </span>
           </div>
 
@@ -152,7 +162,7 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
               2
             </span>
             <span className="text-[11px] leading-tight">
-              Aponte a câmera para o QR Code ao lado ou clique em <strong>Copiar Código Pix</strong>.
+              Escolha <strong>"Ler QR Code"</strong> e aponte a câmera do celular para a imagem ao lado.
             </span>
           </div>
 
@@ -161,17 +171,43 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
               3
             </span>
             <span className="text-[11px] leading-tight">
-              Confirme o valor de{' '}
-              <strong className="text-emerald-400">
-                R$ {activeAmount.toFixed(2).replace('.', ',')}
-              </strong>{' '}
-              para <strong>{beneficiaryName}</strong>.
+              {activeAmount > 0 ? (
+                <>
+                  Confirme o valor de{' '}
+                  <strong className="text-emerald-400">
+                    R$ {activeAmount.toFixed(2).replace('.', ',')}
+                  </strong>{' '}
+                  para <strong>{beneficiaryName || 'Moreninha do Bronze'}</strong>.
+                </>
+              ) : (
+                <>
+                  Digite o valor desejado e confirme o envio para{' '}
+                  <strong>{beneficiaryName || 'Moreninha do Bronze'}</strong>.
+                </>
+              )}
             </span>
           </div>
 
-          <div className="pt-1 flex items-center gap-1.5 text-[10px] text-ruby-300">
+          {/* Key badge with one-click copy */}
+          <div className="pt-2 flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono">
+              <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Chave: <strong>{formatPixKeyDisplay(activeKey)}</strong></span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleCopyRawKey}
+              className="text-[10px] px-2 py-1 rounded-lg border border-gold-400/40 text-gold-300 hover:bg-gold-500 hover:text-ruby-950 transition cursor-pointer flex items-center gap-1 font-semibold"
+            >
+              {copiedKey ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+              <span>{copiedKey ? 'Chave Copiada!' : 'Copiar Apenas a Chave'}</span>
+            </button>
+          </div>
+
+          <div className="pt-1 flex items-center gap-1.5 text-[10px] text-gray-400">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Chave autêntica protegida pelo Banco Central</span>
+            <span>Padrão BR Code oficial compatível com todos os bancos do Brasil</span>
           </div>
         </div>
       </div>
@@ -179,7 +215,7 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
       {/* Copy and Paste Field */}
       <div className="space-y-1.5">
         <label className="text-[11px] text-gray-300 font-medium flex items-center justify-between">
-          <span>Código Pix Copia e Cola:</span>
+          <span>Código Pix Copia e Cola (para pagar no mesmo celular):</span>
           <span className="text-[10px] text-gold-400/90 font-mono">TxID: {txId}</span>
         </label>
 
@@ -193,14 +229,14 @@ export const DynamicPixCard: React.FC<DynamicPixCardProps> = ({
 
           <button
             type="button"
-            onClick={handleCopy}
+            onClick={handleCopyPayload}
             className={`px-4 py-2 font-bold text-xs rounded-xl transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer shadow-md ${
-              copied
+              copiedPayload
                 ? 'bg-emerald-600 text-white'
                 : 'bg-gold-500 hover:bg-gold-400 text-ruby-950 hover:shadow-gold-500/20'
             }`}
           >
-            {copied ? (
+            {copiedPayload ? (
               <>
                 <Check className="w-3.5 h-3.5" />
                 <span>Copiado!</span>

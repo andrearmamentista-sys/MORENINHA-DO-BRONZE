@@ -35,9 +35,11 @@ export const ThemeAndTextCustomizerModal: React.FC<ThemeAndTextCustomizerModalPr
     guideTitle: settings.guideTitle || 'Protocolo de Preparação e Cuidados com o Bronze',
     btnServicesText: settings.btnServicesText || 'Conhecer Procedimentos',
     btnBoutiqueText: settings.btnBoutiqueText || 'Boutique Sensual',
-    btnBuyText: settings.btnBuyText || 'Comprar',
     address: settings.address,
-    hours: settings.hours,
+    cityState: settings.cityState,
+    hours: settings.hours || 'Terça a Domingo: 08h às 18h',
+    locationBadgeTitle: settings.locationBadgeTitle || 'Localização & Conforto Exclusivo',
+    locationTitle: settings.locationTitle || 'Nosso Studio VIP',
     whatsapp: settings.whatsapp,
     themePrimaryColor: settings.themePrimaryColor || 'blue',
     themeTextColor: settings.themeTextColor || '#ffffff',
@@ -385,6 +387,84 @@ export const ThemeAndTextCustomizerModal: React.FC<ThemeAndTextCustomizerModalPr
                     onChange={(e) => setFormData({ ...formData, boutiqueTitle: e.target.value })}
                     className="w-full bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white"
                   />
+                </div>
+              </div>
+
+              {/* Localização, Horários e Conforto Exclusivo */}
+              <div className="p-3.5 rounded-xl bg-slate-900/80 border border-sky-500/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">
+                    Localização & Conforto Exclusivo (Editável)
+                  </span>
+                  <span className="text-[10px] text-emerald-400 font-medium bg-emerald-950/80 px-2 py-0.5 rounded-lg border border-emerald-800/60">
+                    Sincronizado na Home
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-gray-300 font-semibold block text-xs">
+                      Selo / Chamada da Seção:
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.locationBadgeTitle || ''}
+                      onChange={(e) => setFormData({ ...formData, locationBadgeTitle: e.target.value })}
+                      placeholder="Localização & Conforto Exclusivo"
+                      className="w-full bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-gray-300 font-semibold block text-xs">
+                      Título do Espaço VIP:
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.locationTitle || ''}
+                      onChange={(e) => setFormData({ ...formData, locationTitle: e.target.value })}
+                      placeholder="Nosso Studio VIP"
+                      className="w-full bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-gray-300 font-semibold block text-xs">
+                    Horário de Funcionamento:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.hours || ''}
+                    onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
+                    placeholder="Terça a Domingo: 08h às 18h"
+                    className="w-full bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white text-xs font-semibold"
+                  />
+                  <span className="text-[10px] text-gray-400">
+                    Padrão: Terça a Domingo: 08h às 18h
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-gray-300 font-semibold block text-xs">Endereço:</label>
+                    <input
+                      type="text"
+                      value={formData.address || ''}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-gray-300 font-semibold block text-xs">Cidade e Estado:</label>
+                    <input
+                      type="text"
+                      value={formData.cityState || ''}
+                      onChange={(e) => setFormData({ ...formData, cityState: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-xl px-3 py-2 text-white text-xs"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

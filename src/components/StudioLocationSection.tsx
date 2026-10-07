@@ -24,11 +24,11 @@ export const StudioLocationSection: React.FC<StudioLocationSectionProps> = ({
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative z-10">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-gold-400 block mb-1">
-              Localização & Conforto Exclusivo
+              {settings.locationBadgeTitle || 'Localização & Conforto Exclusivo'}
             </span>
             <h4 className="font-serif text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
               <MapPin className="w-5 h-5 text-gold-400 shrink-0" />
-              <span>Nosso Studio VIP</span>
+              <span>{settings.locationTitle || 'Nosso Studio VIP'}</span>
             </h4>
             <p className="text-xs sm:text-sm text-gray-300 mt-1">
               {settings.address} · {settings.cityState}
@@ -37,16 +37,17 @@ export const StudioLocationSection: React.FC<StudioLocationSectionProps> = ({
 
           <div className="flex items-center space-x-2">
             <span className="text-xs text-gold-300 font-medium bg-ruby-950/80 px-3.5 py-1.5 rounded-xl border border-ruby-800">
-              {settings.hours}
+              {settings.hours || 'Terça a Domingo: 08h às 18h'}
             </span>
 
             {isAdminLoggedIn && onEditSettings && (
               <button
                 onClick={onEditSettings}
-                title="Editar endereço e horários (Admin)"
-                className="p-2 rounded-xl bg-gold-500 text-ruby-950 font-bold hover:bg-gold-400 transition cursor-pointer"
+                title="Editar Localização, Horários e Conforto Exclusivo (Admin)"
+                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-gold-500 text-ruby-950 font-bold hover:bg-gold-400 transition cursor-pointer flex items-center gap-1.5 text-xs shadow-md"
               >
                 <Edit2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Editar Localização & Horários</span>
               </button>
             )}
           </div>
@@ -54,22 +55,20 @@ export const StudioLocationSection: React.FC<StudioLocationSectionProps> = ({
 
         {/* Studio Comfort Features Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-gray-300 pt-3 border-t border-ruby-900/60 relative z-10">
-          <div className="flex items-center gap-2 bg-ruby-950/40 p-2.5 rounded-xl border border-ruby-800/40">
-            <Check className="w-4 h-4 text-gold-400 shrink-0" />
-            <span className="font-medium">Ambiente Climatizado</span>
-          </div>
-          <div className="flex items-center gap-2 bg-ruby-950/40 p-2.5 rounded-xl border border-ruby-800/40">
-            <Check className="w-4 h-4 text-gold-400 shrink-0" />
-            <span className="font-medium">Máx. 2 Clientes Simultâneas</span>
-          </div>
-          <div className="flex items-center gap-2 bg-ruby-950/40 p-2.5 rounded-xl border border-ruby-800/40">
-            <Check className="w-4 h-4 text-gold-400 shrink-0" />
-            <span className="font-medium">Ducha Pós-Sol Térmica</span>
-          </div>
-          <div className="flex items-center gap-2 bg-ruby-950/40 p-2.5 rounded-xl border border-ruby-800/40">
-            <Check className="w-4 h-4 text-gold-400 shrink-0" />
-            <span className="font-medium">Biquíni Descartável Estéril</span>
-          </div>
+          {(settings.comfortFeatures && settings.comfortFeatures.length > 0
+            ? settings.comfortFeatures
+            : [
+                'Ambiente Climatizado',
+                'Máx. 2 Clientes Simultâneas',
+                'Ducha Pós-Sol Térmica',
+                'Biquíni Descartável Estéril'
+              ]
+          ).map((feature, idx) => (
+            <div key={idx} className="flex items-center gap-2 bg-ruby-950/40 p-2.5 rounded-xl border border-ruby-800/40">
+              <Check className="w-4 h-4 text-gold-400 shrink-0" />
+              <span className="font-medium">{feature}</span>
+            </div>
+          ))}
         </div>
 
         {/* Map & WhatsApp CTAs */}

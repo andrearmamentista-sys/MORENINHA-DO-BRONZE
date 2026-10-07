@@ -159,11 +159,11 @@ export const INITIAL_SETTINGS: StudioSettings = {
   subtitle: 'Studio VIP & Boutique Exclusiva',
   heroTitle: 'Sua marquinha perfeita com o luxo e o cuidado que você merece.',
   heroDesc: 'Procedimentos personalizados com fita milimétrica, aceleradores importados e acompanhamento rigoroso por fototipo de pele. Agende seu horário com pagamento no local no dia do atendimento e preencha sua anamnese digital em menos de 1 minuto.',
-  whatsapp: '5521998765432',
-  pixKey: '00020126580014BR.GOV.BCB.PIX0136moreninhabronze-pix-oficial-12345',
-  pixKeyType: 'Chave Aleatória (EVP)',
-  pixBeneficiary: 'Mariana Guedes Bronze Studio ME',
-  pixBank: 'Nubank / PagSeguro',
+  whatsapp: '5521976333205',
+  pixKey: '21976333205',
+  pixKeyType: 'Telefone Celular',
+  pixBeneficiary: 'Moreninha do Bronze',
+  pixBank: 'Pix Instantâneo',
   address: 'Rua das Orquídeas, 142 - Bairro VIP',
   cityState: 'Rio de Janeiro - RJ',
   hours: 'Terça a Domingo: 08h às 18h',
@@ -184,7 +184,15 @@ export const INITIAL_SETTINGS: StudioSettings = {
   btnBuyText: 'Comprar',
   themePrimaryColor: 'blue',
   themeTextColor: '#ffffff',
-  themeBgColor: '#07152b'
+  themeBgColor: '#07152b',
+  locationBadgeTitle: 'Localização & Conforto Exclusivo',
+  locationTitle: 'Nosso Studio VIP',
+  comfortFeatures: [
+    'Ambiente Climatizado',
+    'Máx. 2 Clientes Simultâneas',
+    'Ducha Pós-Sol Térmica',
+    'Biquíni Descartável Estéril'
+  ]
 };
 
 export const INITIAL_ADMIN_CREDENTIALS = {

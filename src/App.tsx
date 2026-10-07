@@ -23,6 +23,7 @@ import { FloatingWhatsAppConcierge } from './components/FloatingWhatsAppConcierg
 import { MascotWidget } from './components/MascotWidget';
 import { MascotSpotlight } from './components/MascotSpotlight';
 import { AnimatedMarquee } from './components/AnimatedMarquee';
+import { QuickPixModal } from './components/QuickPixModal';
 import { Footer } from './components/Footer';
 import { applyThemeToDocument } from './utils/themeEngine';
 
@@ -99,7 +100,32 @@ export default function App() {
 
   const [settings, setSettings] = useState<StudioSettings>(() => {
     const saved = localStorage.getItem('mbronze_settings');
-    return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
+    const base: StudioSettings = saved ? JSON.parse(saved) : INITIAL_SETTINGS;
+    if (!base.pixKey || base.pixKey.includes('moreninhabronze-pix-oficial')) {
+      base.pixKey = '21976333205';
+      base.pixKeyType = 'Telefone Celular';
+      base.pixBeneficiary = 'Moreninha do Bronze';
+    }
+    if (!base.locationBadgeTitle) {
+      base.locationBadgeTitle = 'Localização & Conforto Exclusivo';
+    }
+    if (!base.hours) {
+      base.hours = 'Terça a Domingo: 08h às 18h';
+    }
+    if (!base.comfortFeatures || base.comfortFeatures.length === 0) {
+      base.comfortFeatures = [
+        'Ambiente Climatizado',
+        'Máx. 2 Clientes Simultâneas',
+        'Ducha Pós-Sol Térmica',
+        'Biquíni Descartável Estéril'
+      ];
+    }
+    try {
+      localStorage.setItem('mbronze_settings', JSON.stringify(base));
+    } catch {
+      // ignore
+    }
+    return base;
   });
 
   const [bookings, setBookings] = useState<Booking[]>(() => {
@@ -139,6 +165,7 @@ export default function App() {
 
   // Modals & Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isPixModalOpen, setIsPixModalOpen] = useState(false);
   const [isAdminAuthOpen, setIsAdminAuthOpen] = useState(false);
   const [addedProductId, setAddedProductId] = useState<string | null>(null);
 
@@ -627,14 +654,13 @@ export default function App() {
     setIsSyncingFirebase(true);
     try {
       // 1. Settings
-      await setDoc(
-        doc(db, 'settings', 'main'),
-        {
-          ...settings,
-          updatedAt: new Date().toISOString()
-        },
-        { merge: true }
-      );
+      const settingsToSync = {
+        ...settings,
+        pixKey: '21976333205',
+        pixKeyType: 'Telefone Celular',
+        updatedAt: new Date().toISOString()
+      };
+      await setDoc(doc(db, 'settings', 'main'), settingsToSync, { merge: true });
 
       // 2. Services
       for (const s of services) {
@@ -840,6 +866,7 @@ export default function App() {
         onSwitchTab={setCurrentTab}
         cartCount={cart.reduce((sum, item) => sum + item.qty, 0)}
         onOpenCart={() => setIsCartOpen(true)}
+        onOpenPix={() => setIsPixModalOpen(true)}
         onOpenImageManager={() => {
           if (!isAdminAuthenticated) {
             setIsAdminAuthOpen(true);
@@ -1102,6 +1129,14 @@ export default function App() {
         onRemoveItem={handleRemoveCartItem}
         onClearCart={handleClearCart}
         settings={settings}
+      />
+
+      {/* Quick Pix QR Code Modal (Instant Phone Camera Scan) */}
+      <QuickPixModal
+        isOpen={isPixModalOpen}
+        onClose={() => setIsPixModalOpen(false)}
+        settings={settings}
+        defaultAmount={25}
       />
 
       {/* Admin Authentication Modal (Login + Password & Google Auth) */}

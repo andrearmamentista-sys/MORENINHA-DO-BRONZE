@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, ShoppingBag, Lock, Image as ImageIcon, Edit2, LogOut, User } from 'lucide-react';
+import { Sun, ShoppingBag, Lock, Image as ImageIcon, Edit2, LogOut, User, QrCode } from 'lucide-react';
 import { ViewTab } from '../types';
 import mascotImage from '../assets/images/mascote.jpg';
 
@@ -8,6 +8,7 @@ interface HeaderProps {
   onSwitchTab: (tab: ViewTab) => void;
   cartCount: number;
   onOpenCart: () => void;
+  onOpenPix?: () => void;
   onOpenImageManager: () => void;
   onOpenAdminAuth: () => void;
   studioName: string;
@@ -29,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSwitchTab,
   cartCount,
   onOpenCart,
+  onOpenPix,
   onOpenImageManager,
   onOpenAdminAuth,
   studioName,
@@ -200,6 +202,18 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ImageIcon className="w-3.5 h-3.5 text-gold-400" />
               <span>Fotos</span>
+            </button>
+          )}
+
+          {/* Quick Pix QR Code Button */}
+          {onOpenPix && (
+            <button
+              onClick={onOpenPix}
+              title="Pagar via Pix / QR Code Rápido (Chave 21976333205)"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-emerald-500/50 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 hover:text-white text-xs font-bold transition cursor-pointer shadow-sm hover:shadow-emerald-500/20"
+            >
+              <QrCode className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Pix</span>
             </button>
           )}
 
